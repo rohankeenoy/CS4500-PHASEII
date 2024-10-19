@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import re
 import time
+from datetime import datetime
 class programA:
     def __init__(self):
         self.introMessage = "---------Welcome to program A of phase II. This program is for validating patterns in file names and checks the validity of file contents. ---------\n"
@@ -47,11 +48,21 @@ class programA:
         if self.fileCheck.shape[0] > 2:
             return 1
         return 0
+    #https://www.geeksforgeeks.org/python-validate-string-date-format/
     def dateCheck(self, date):
-        pass
-        
-        
+        #format reference https://pynative.com/python-datetime-format-strftime/
+        format = "%m/%d/%Y"
+        isDateValid = True
+        try:
+            isDateValid = bool(datetime.strptime(date,format))
+        except:
+            isDateValid = False
             
+        if isDateValid == False:
+            return 1
+        else:
+            return 0
+                 
     #base check for fromat
     def openFilesAndCheck(self):
         #main loop for checking
@@ -69,27 +80,23 @@ class programA:
             #check if there are additional lines, if return 0 then it is just the header and is empty
             if (self.checkForAdditionalLines() < 1):
                 # we are done checking so
-                self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for CLASS name failed")
+                self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for CLASS name failed line 2")
                 continue
             #we can now iterate through the rows of the dataframe checking each column, it is assumed if we make it here that the file starts at row 3.
             checkedFailed = self.dateCheck()
             for index, row in self.fileCheck.iloc[2:].iterrows():
-                #date check
-                checkedFailed = dateCheck(row[0])
-                
-                
-                
-                
                 self.currentLine = index
+                #date check
+                date = row[0]
+                print(f"Type of Date {type(date)}")
+                checkedFailed = self.dateCheck(self, date)
+                if checkedFailed == 1:
+                    self.writeToValidityFile(f"FILE {self.currentFile}: check for date failed on line {self.currentLine}")
+                    break
                 
-                
-    
-            
-            
-                
-                
-            
-                
+            if checkedFailed == 1:
+                continue
+  
                 
                   
     #checks directory
