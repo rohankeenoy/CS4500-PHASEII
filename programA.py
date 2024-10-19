@@ -11,6 +11,7 @@ class programA:
         self.fileCreated = False
         self.fileCheck = pd.DataFrame()
         self.currentFile = ""
+        self.currentLine = 0
     
         self.classDriver()
     #write to that file
@@ -29,19 +30,25 @@ class programA:
             self.writeToValidityFile(f"FILE {self.currentFile}: CSV is empty.")
             return 1
         elif self.fileCheck.shape[0] < 2 or self.fileCheck.shape[1] < 2:
-            self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for shape failed")
+            self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for shape failed on line 0 or 1")
             return 1
         #A CHECK FOR THE FIRST LAST NAME
         elif pd.isna(self.fileCheck.iloc[0,0]) or pd.isna(self.fileCheck.iloc[0,1]) or  (self.fileCheck.iloc[0, 0] == False or self.fileCheck.iloc[0, 1] == False) :
-            self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for name failed")
+            self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for name failed on line 1")
             return 1
         #acheck for CLASS NAME
         elif pd.isna(self.fileCheck.iloc[1,0]) or self.fileCheck.iloc[1,0] != "CS 4500" :
-            self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for CLASS name failed")
+            self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for CLASS name failed on line 2")
             return 1
         
         else:
             return 0
+    def checkForAdditionalLines(self):
+        if self.fileCheck.shape[0] > 2:
+            return 1
+        return 0
+    def dateCheck(self):
+        pass
             
     #base check for fromat
     def openFilesAndCheck(self):
@@ -53,9 +60,18 @@ class programA:
             print(self.fileCheck)
             self.createFile()
             #self.initialFormatCheck(fileCheck)
+            #check initial format
             checkedFailed = self.initialFormatCheck()
             if checkedFailed == 1:
                 continue
+            #check if there are additional lines, if return 0 then it is just the header and is empty
+            if (self.checkForAdditionalLines() < 1):
+                # we are done checking so
+                self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for CLASS name failed")
+                continue
+            
+    
+            
             
                 
                 
