@@ -25,7 +25,7 @@ class programA:
         if self.fileCreated == False:
             with open(self.fileName, "w") as  validCheck:
                 self.fileCreated = True
-                
+    #test line by justin          
     def initialFormatCheck(self):
         if self.fileCheck.empty:
             self.writeToValidityFile(f"FILE {self.currentFile}: CSV is empty.")
