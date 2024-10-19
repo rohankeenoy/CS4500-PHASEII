@@ -11,7 +11,7 @@ class programA:
         self.fileCreated = False
         self.fileCheck = pd.DataFrame()
         self.currentFile = ""
-        self.currentLine = 0
+        self.currentLine = 3
     
         self.classDriver()
     #write to that file
@@ -47,8 +47,10 @@ class programA:
         if self.fileCheck.shape[0] > 2:
             return 1
         return 0
-    def dateCheck(self):
+    def dateCheck(self, date):
         pass
+        
+        
             
     #base check for fromat
     def openFilesAndCheck(self):
@@ -69,7 +71,18 @@ class programA:
                 # we are done checking so
                 self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for CLASS name failed")
                 continue
-            
+            #we can now iterate through the rows of the dataframe checking each column, it is assumed if we make it here that the file starts at row 3.
+            checkedFailed = self.dateCheck()
+            for index, row in self.fileCheck.iloc[2:].iterrows():
+                #date check
+                checkedFailed = dateCheck(row[0])
+                
+                
+                
+                
+                self.currentLine = index
+                
+                
     
             
             
