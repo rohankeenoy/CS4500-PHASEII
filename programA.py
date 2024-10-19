@@ -18,7 +18,7 @@ class programA:
     #write to that file
     def writeToValidityFile(self, toWrite):
         if self.fileCreated == True:
-            with open(self.fileName, "w") as validCheck:
+            with open(self.fileName, "a") as validCheck:
                 validCheck.write(f"{toWrite} . \n")
     #create a file
     def createFile(self):
@@ -61,9 +61,35 @@ class programA:
             return 1
         else:
             return 0
+        
+    def checkPplInvolved(self,ppl):
+        ppl = int(ppl)
+        if ppl < 1 or ppl > 50:
+            return 1
+        else:
+            return 0
+    
+    def checkActivityCode(self, activityCode):
+        validCodes = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D"]
+        if activityCode in validCodes:
+            return 0
+        else:
+            return 1
+        
+    def checkNote(self, activityCode, note):
+        if activityCode == "D":
+            if(len(note)< 1):
+                return 1
+        elif "," in note:
+            return 1
+        elif len(note) > 80:
+            return 1
+        else:
+            return 0
                  
     #base check for fromat
     def openFilesAndCheck(self):
+        print(self.listOfDirectoryFiles)
         #main loop for checking
         for file in self.listOfDirectoryFiles:
             checkedFailed = 0
@@ -83,18 +109,35 @@ class programA:
                 continue
             #we can now iterate through the rows of the dataframe checking each column, it is assumed if we make it here that the file starts at row 3.
             for index, row in self.fileCheck.iloc[2:].iterrows():
-                self.currentLine = index
+                self.currentLine = index+1
                 #date check
                 date = row[0]
-                print(f"Type of Date {type(date)}")
                 checkedFailed = self.dateCheck( date)
                 if checkedFailed == 1:
                     self.writeToValidityFile(f"FILE {self.currentFile}: check for date failed on line {self.currentLine}")
                     break
                 
+                pplInvolved = row[3]
+                checkedFailed = self.checkPplInvolved(pplInvolved)
+                if checkedFailed == 1:
+                    self.writeToValidityFile(f"File {self.currentFile}: check for 3rd column, people invovled, failed on line {self.currentLine}")
+                    break
+                
+                activityCode = row[4]
+                checkedFailed = self.checkActivityCode(activityCode)
+                if checkedFailed ==1:
+                     self.writeToValidityFile(f"File {self.currentFile}: check for 4th column, activity code, failed on line {self.currentLine}")
+                     break
+                note = row[5]
+                checkedFailed = self.checkNote(activityCode, note)
+                if checkedFailed == 1:
+                    self.writeToValidityFile(f"File {self.currentFile}: check for 5th column, activity code, failed on line {self.currentLine} This could be because other was selected as an activity code and no note was entered > 1 OR contains a comma OR is longer than 80 chars. ")
+                    break
+                
             if checkedFailed == 1:
                 continue
-  
+            
+            self.writeToValidityFile(f"FILE {self.currentFile}: SUCCESSFUL")
                 
                   
     #checks directory
