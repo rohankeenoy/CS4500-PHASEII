@@ -18,7 +18,7 @@ class programA:
     #write to that file
     def writeToValidityFile(self, toWrite):
         if self.fileCreated == True:
-            with open(self.filename, "w") as validCheck:
+            with open(self.fileName, "w") as validCheck:
                 validCheck.write(f"{toWrite} . \n")
     #create a file
     def createFile(self):
@@ -41,7 +41,6 @@ class programA:
         elif pd.isna(self.fileCheck.iloc[1,0]) or self.fileCheck.iloc[1,0] != "CS 4500" :
             self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for CLASS name failed on line 2")
             return 1
-        
         else:
             return 0
     def checkForAdditionalLines(self):
@@ -57,7 +56,7 @@ class programA:
             isDateValid = bool(datetime.strptime(date,format))
         except:
             isDateValid = False
-            
+                
         if isDateValid == False:
             return 1
         else:
@@ -83,13 +82,12 @@ class programA:
                 self.writeToValidityFile(f"FILE {self.currentFile}: Initial check for CLASS name failed line 2")
                 continue
             #we can now iterate through the rows of the dataframe checking each column, it is assumed if we make it here that the file starts at row 3.
-            checkedFailed = self.dateCheck()
             for index, row in self.fileCheck.iloc[2:].iterrows():
                 self.currentLine = index
                 #date check
                 date = row[0]
                 print(f"Type of Date {type(date)}")
-                checkedFailed = self.dateCheck(self, date)
+                checkedFailed = self.dateCheck( date)
                 if checkedFailed == 1:
                     self.writeToValidityFile(f"FILE {self.currentFile}: check for date failed on line {self.currentLine}")
                     break
