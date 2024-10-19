@@ -25,7 +25,7 @@ class programA:
         if self.fileCreated == False:
             with open(self.fileName, "w") as  validCheck:
                 self.fileCreated = True
-    #test line by justin          
+            
     def initialFormatCheck(self):
         if self.fileCheck.empty:
             self.writeToValidityFile(f"FILE {self.currentFile}: CSV is empty.")
@@ -116,7 +116,14 @@ class programA:
                 if checkedFailed == 1:
                     self.writeToValidityFile(f"FILE {self.currentFile}: check for date failed on line {self.currentLine}")
                     break
-                
+                #Justin BLOC
+                timeCheck1 = row[1]
+                timeCheck2 = row[2]
+                checkedFailed = self.timeCheck(timeCheck1, timeCheck2)
+                if checkedFailed ==1:
+                    self.writeToValidityFile(f"FILE {self.currentFile}: time elapsed exceeds end of day on line {self.currentLine}")
+                    break
+                #END JUSTIN 
                 pplInvolved = row[3]
                 checkedFailed = self.checkPplInvolved(pplInvolved)
                 if checkedFailed == 1:
@@ -138,8 +145,15 @@ class programA:
                 continue
             
             self.writeToValidityFile(f"FILE {self.currentFile}: SUCCESSFUL")
-                
-                  
+    #Justin Bloc   
+    def timeCheck(self, t1, t2):
+        #This only checks it for the HH:MM:SS format and assume military time
+        format = "%H:%M:%S"
+        if( datetime.hour(datetime.strptime(t2, format)) < datetime.hour(datetime.strptime(t1, format)) ):
+            return 1
+        else:
+            return 0
+
     #checks directory
     def fileChecks(self):
         #modified my old regex from phase A, tested on regex101.com. 
