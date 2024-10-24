@@ -124,11 +124,17 @@ class programA:
                     if checkedFailed ==1:
                         self.writeToValidityFile(f"FILE {self.currentFile}: time elapsed exceeds end of day on line {self.currentLine}")
                         break                        
-                    self.writeToValidityFile(f"FILE {self.currentFile}: TIME SUCCESS {self.currentLine}")
+                    #self.writeToValidityFile(f"FILE {self.currentFile}: TIME SUCCESS {self.currentLine}")
                 except:
                     checkedFailed = 1
                     self.writeToValidityFile(f"FILE {self.currentFile}: time is not in HH:MM format on line {self.currentLine}")
                 if checkedFailed == 1:
+                    break
+                
+                #check if time elapsed is greater than 4 hours
+                checkedFailed = self.overTimeCheck(timeCheck1, timeCheck2)
+                if checkedFailed == 1:
+                    self.writeToValidityFile(f"FILE {self.currentFile}: time elapsed exceeds 4 hours on line {self.currentLine}")
                     break
                 #END JUSTIN 
                 pplInvolved = row[3]
@@ -161,7 +167,18 @@ class programA:
             return 1
         else:
             return 0
-
+    #Justin Bloc 2
+    #This function checks if the elapsed time is greater than 4 hours, which is unacceptable according to the specifications
+    def overTimeCheck(self, t1, t2):
+        #This function assumes t2 > t1, so it is called chronologically after timeCheck which makes sure that t2 > t1
+        #if(  (datetime.strptime(t2, format).hour +((datetime.strptime(t2, format).minute)/60)) - (datetime.strptime(t1, format).hour+((datetime.strptime(t1, format).minute)/60)) >4  ):
+        delta = datetime.strptime(datetime.strptime(t2, format) - datetime.strptime(t1, format))
+        if( delta.hour > 4  ):
+            return 1
+        elif (delta.hour == 4 and delta.minute > 0 ):
+            return 1
+        else
+            return 0
     #checks directory
     def fileChecks(self):
         #modified my old regex from phase A, tested on regex101.com. 

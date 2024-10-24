@@ -1,7 +1,4 @@
+FILE badTimeMacapanpanJustinLog.csv: time is not in HH:MM format on line 5 . 
+FILE badTimeTwoMacapanpanJustinLog.csv: time elapsed exceeds end of day on line 3 . 
 FILE FailedKeenoyRohanLog.csv: check for date failed on line 3 . 
-FILE workingKeenoyRohanLOG.csv: TIME SUCCESS 3 . 
-FILE workingKeenoyRohanLOG.csv: TIME SUCCESS 4 . 
-FILE workingKeenoyRohanLOG.csv: TIME SUCCESS 5 . 
-FILE workingKeenoyRohanLOG.csv: TIME SUCCESS 6 . 
-FILE workingKeenoyRohanLOG.csv: TIME SUCCESS 7 . 
 FILE workingKeenoyRohanLOG.csv: SUCCESSFUL . 
