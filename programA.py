@@ -119,9 +119,16 @@ class programA:
                 #Justin BLOC
                 timeCheck1 = row[1]
                 timeCheck2 = row[2]
-                checkedFailed = self.timeCheck(timeCheck1, timeCheck2)
-                if checkedFailed ==1:
-                    self.writeToValidityFile(f"FILE {self.currentFile}: time elapsed exceeds end of day on line {self.currentLine}")
+                try:
+                    checkedFailed = self.timeCheck(timeCheck1, timeCheck2)
+                    if checkedFailed ==1:
+                        self.writeToValidityFile(f"FILE {self.currentFile}: time elapsed exceeds end of day on line {self.currentLine}")
+                        break                        
+                    self.writeToValidityFile(f"FILE {self.currentFile}: TIME SUCCESS {self.currentLine}")
+                except:
+                    checkedFailed = 1
+                    self.writeToValidityFile(f"FILE {self.currentFile}: time is not in HH:MM format on line {self.currentLine}")
+                if checkedFailed == 1:
                     break
                 #END JUSTIN 
                 pplInvolved = row[3]
@@ -148,8 +155,9 @@ class programA:
     #Justin Bloc   
     def timeCheck(self, t1, t2):
         #This only checks it for the HH:MM:SS format and assume military time
-        format = "%H:%M:%S"
-        if( datetime.hour(datetime.strptime(t2, format)) < datetime.hour(datetime.strptime(t1, format)) ):
+        format = "%H:%M"
+        
+        if(  datetime.strptime(t2, format).hour < datetime.strptime(t1, format).hour ):
             return 1
         else:
             return 0
@@ -166,7 +174,7 @@ class programA:
                 self.listOfDirectoryFiles.append(file)
         print(f"LENGTH {len(self.listOfDirectoryFiles)}")
         if len(self.listOfDirectoryFiles) <= 0:
-            print("There are no valid files matching pattern: X (any capital letter) + [lL][oO][gG]\.[cC][sS][vV] \n EXITING.......")
+            #print("There are no valid files matching pattern: X (any capital letter) + [lL][oO][gG]\.[cC][sS][vV] \n EXITING.......")
             #had to put this in so when an executable is generated it doesn't quit extremely fast
             time.sleep(2)
             exit(1)
